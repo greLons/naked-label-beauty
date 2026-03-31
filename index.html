@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naked Label Beauty — Know What's Inside</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark-green: #2D4A3E;
+  --mid-green: #6B8C7A;
+  --light-green: #e8efe9;
+  --beige: #C4967A;
+  --beige-light: #f5ede6;
+  --bg: #E8E6E0;
+  --surface: #FFFFFF;
+  --border: #d4d0c8;
+  --text: #1A1A18;
+  --muted: #6B6B67;
+  --hint: #A8A8A4;
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; color: #C4607A; cursor: pointer; }
+.nav-logo span { color: var(--mid-green); }
+.nav-links { display: flex; gap: 8px; align-items: center; }
+.nav-btn { padding: 7px 16px; border-radius: 99px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--mid-green); transition: all 0.15s; }
+.nav-btn:hover { background: var(--light-green); }
+.nav-btn.primary { background: #C4967A; color: #fff; border-color: #C4967A; }
+.nav-btn.primary:hover { opacity: 0.88; }
+.nav-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--light-green); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: var(--mid-green); cursor: pointer; border: 1px solid var(--mid-green); }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.hero { max-width: 720px; margin: 0 auto; padding: 4rem 2rem 2rem; text-align: center; }
+.hero-label { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid-green); margin-bottom: 1rem; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: 42px; line-height: 1.2; margin-bottom: 1rem; color: var(--text); }
+.hero-title span { color: #C4607A; font-style: italic; }
+.hero-sub { font-size: 16px; color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 auto 2.5rem; }
+
+.analyzer-card { max-width: 680px; margin: 0 auto 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.tabs { display: flex; border-bottom: 1px solid var(--border); }
+.tab { flex: 1; padding: 14px; text-align: center; font-size: 14px; color: var(--muted); cursor: pointer; border: none; background: transparent; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+.tab.active { color: #C4967A; border-bottom: 2px solid #C4967A; font-weight: 500; }
+.tab-panel { display: none; padding: 1.5rem; }
+.tab-panel.active { display: block; }
+
+.barcode-drop { border: 1.5px dashed var(--mid-green); border-radius: var(--radius); padding: 2.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--light-green); }
+.barcode-drop:hover { border-color: var(--dark-green); background: #dceade; }
+.barcode-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.5; color: var(--mid-green); }
+.barcode-drop p { font-size: 14px; color: var(--muted); }
+.barcode-drop small { font-size: 12px; color: var(--hint); margin-top: 4px; display: block; }
+.barcode-input { width: 100%; margin-top: 1rem; padding: 10px 14px; border: 1px solid var(--mid-green); border-radius: var(--radius); font-size: 14px; font-family: 'DM Sans', sans-serif; background: var(--light-green); color: var(--text); outline: none; }
+.barcode-input:focus { border-color: var(--dark-green); }
+
+textarea.comp-input { width: 100%; min-height: 110px; resize: vertical; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--light-green); border: 1px solid var(--mid-green); border-radius: var(--radius); padding: 12px 14px; outline: none; line-height: 1.6; display: block; }
+textarea.comp-input:focus { border-color: var(--dark-green); }
+
+.form-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; display: block; }
+.zone-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 1rem 0; justify-content: center; }
+.zone-btn { padding: 6px 16px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+.zone-btn.active { background: #C4967A; border-color: #C4967A; color: #fff; }
+.zone-btn:hover:not(.active) { border-color: #C4967A; color: #C4967A; }
+
+.analyze-btn { width: 100%; padding: 13px; border-radius: var(--radius); background: #C4967A; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.15s; margin-top: 1rem; }
+.analyze-btn:hover { opacity: 0.88; }
+.analyze-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* API key notice */
+.api-notice { max-width: 680px; margin: 0 auto 1rem; padding: 12px 16px; background: #fef3e2; border: 1px solid #e8a838; border-radius: var(--radius); font-size: 13px; color: #b07d10; display: none; }
+.api-notice a { color: #C4967A; cursor: pointer; text-decoration: underline; }
+
+.result-wrap { max-width: 680px; margin: 0 auto 3rem; display: none; }
+.score-bar { display: flex; align-items: center; gap: 16px; padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); border: 1px solid; margin-bottom: 1rem; }
+.score-excellent { background: var(--light-green); border-color: var(--mid-green); }
+.score-good { background: var(--beige-light); border-color: var(--beige); }
+.score-caution { background: #fef3e2; border-color: #e8a838; }
+.score-bad { background: #f5ede6; border-color: #C4967A; }
+.score-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500; flex-shrink: 0; }
+.score-excellent .score-icon { background: var(--mid-green); color: #fff; }
+.score-good .score-icon { background: var(--beige); color: #fff; }
+.score-caution .score-icon { background: #e8a838; color: #fff; }
+.score-bad .score-icon { background: #C4967A; color: #fff; }
+.score-title { font-size: 17px; font-weight: 500; }
+.score-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.save-btn { margin-left: auto; padding: 8px 16px; border-radius: 99px; border: 1px solid #C4967A; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.15s; flex-shrink: 0; color: #C4967A; background: transparent; }
+.save-btn:hover { background: #f5ede6; }
+
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+.result-card-title { font-size: 15px; font-weight: 500; margin-bottom: 12px; color: var(--dark-green); }
+.summary-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-g { background: var(--mid-green); }
+.dot-y { background: #e8a838; }
+.dot-r { background: #C4967A; }
+.dot-gr { background: var(--hint); }
+.ingr-list { list-style: none; }
+.ingr-item { border-bottom: 1px solid var(--border); }
+.ingr-item:last-child { border-bottom: none; }
+.ingr-row { display: flex; align-items: center; gap: 10px; padding: 11px 0; cursor: pointer; }
+.ingr-row:hover .ingr-name { color: var(--dark-green); }
+.ingr-name { font-size: 14px; flex: 1; }
+.ingr-pill { font-size: 11px; padding: 2px 10px; border-radius: 99px; }
+.pill-safe { background: var(--light-green); color: var(--dark-green); }
+.pill-caution { background: #fef3e2; color: #b07d10; }
+.pill-avoid { background: #f5ede6; color: #C4967A; }
+.pill-neutral { background: var(--bg); color: var(--hint); border: 1px solid var(--border); }
+.ingr-chev { font-size: 10px; color: var(--hint); transition: transform 0.2s; display: inline-block; }
+.ingr-chev.open { transform: rotate(180deg); }
+.ingr-body { display: none; padding: 0 0 14px 18px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+.ingr-body.open { display: block; }
+.ingr-role { font-size: 11px; color: var(--hint); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.ingr-warn { margin-top: 6px; padding: 6px 10px; border-radius: 8px; font-size: 12px; }
+.warn-caution { background: #fef3e2; color: #b07d10; }
+.warn-avoid { background: #f5ede6; color: #C4967A; }
+
+.product-found-banner { background: var(--light-green); border: 1px solid var(--mid-green); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 12px; font-size: 13px; color: var(--dark-green); display: flex; align-items: center; gap: 8px; }
+.product-found-banner strong { font-weight: 500; }
+
+.loading-state { text-align: center; padding: 3rem; }
+.spinner { width: 32px; height: 32px; border: 2px solid var(--border); border-top-color: #C4967A; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: var(--muted); }
+
+/* Settings panel for API key */
+.settings-wrap { max-width: 480px; margin: 3rem auto; padding: 0 2rem; }
+.settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; }
+.settings-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--dark-green); margin-bottom: 6px; }
+.settings-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+.settings-sub a { color: #C4967A; text-decoration: none; }
+.settings-sub a:hover { text-decoration: underline; }
+.settings-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); outline: none; display: block; margin-bottom: 1rem; }
+.settings-input:focus { border-color: var(--mid-green); }
+.settings-save-btn { width: 100%; padding: 12px; border-radius: var(--radius); background: #C4967A; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.15s; }
+.settings-save-btn:hover { opacity: 0.88; }
+.key-status { font-size: 12px; margin-top: 8px; }
+.key-status.ok { color: var(--mid-green); }
+.key-status.missing { color: #C4967A; }
+
+.auth-wrap { min-height: calc(100vh - 60px); display: flex; align-items: center; justify-content: center; padding: 2rem; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; width: 100%; max-width: 400px; }
+.auth-title { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 6px; color: var(--dark-green); }
+.auth-sub { font-size: 14px; color: var(--muted); margin-bottom: 2rem; }
+.google-btn { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-size: 14px; font-family: 'DM Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text); transition: background 0.15s; margin-bottom: 1.5rem; }
+.google-btn:hover { background: var(--bg); }
+.divider { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-text { font-size: 12px; color: var(--hint); }
+.field { margin-bottom: 1rem; }
+.field label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+.field input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); outline: none; display: block; }
+.field input:focus { border-color: var(--mid-green); }
+.submit-btn { width: 100%; padding: 12px; border-radius: var(--radius); background: #C4967A; color: #fff; border: none; font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 0.5rem; transition: opacity 0.15s; }
+.submit-btn:hover { opacity: 0.88; }
+.auth-switch { text-align: center; margin-top: 1.5rem; font-size: 13px; color: var(--muted); }
+.auth-switch a { color: #C4967A; cursor: pointer; text-decoration: none; }
+
+.cabinet-wrap { max-width: 800px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+.cabinet-header { display: flex; align-items: center; gap: 16px; margin-bottom: 2.5rem; }
+.cabinet-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--light-green); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500; color: var(--mid-green); border: 1px solid var(--mid-green); }
+.cabinet-name { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--dark-green); }
+.cabinet-email { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.cabinet-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+.stat-num { font-size: 22px; font-weight: 500; }
+.stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.stat-green .stat-num { color: var(--mid-green); }
+.stat-amber .stat-num { color: var(--beige); }
+.stat-orange .stat-num { color: #e8a838; }
+.stat-red .stat-num { color: #C4967A; }
+.cabinet-sections { display: flex; flex-direction: column; gap: 1.25rem; }
+.section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.section-head { display: flex; align-items: center; gap: 10px; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+.section-dot { width: 10px; height: 10px; border-radius: 50%; }
+.section-title-text { font-size: 15px; font-weight: 500; flex: 1; }
+.section-count { font-size: 12px; color: var(--hint); background: var(--bg); padding: 2px 10px; border-radius: 99px; border: 1px solid var(--border); }
+.product-list { list-style: none; }
+.product-item { display: flex; align-items: center; gap: 14px; padding: 13px 1.25rem; border-bottom: 1px solid var(--border); }
+.product-item:last-child { border-bottom: none; }
+.product-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.product-name { font-size: 14px; font-weight: 500; }
+.product-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.product-date { font-size: 12px; color: var(--hint); margin-left: auto; flex-shrink: 0; }
+.product-del { background: none; border: none; cursor: pointer; color: var(--hint); font-size: 16px; padding: 4px 8px; border-radius: 6px; transition: all 0.15s; }
+.product-del:hover { color: #C4967A; background: #f5ede6; }
+.empty-state { padding: 2rem; text-align: center; color: var(--hint); font-size: 13px; }
+
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: var(--radius-lg); padding: 1.5rem; width: 360px; }
+.modal-title { font-size: 16px; font-weight: 500; margin-bottom: 1rem; color: var(--dark-green); }
+.modal-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); outline: none; display: block; margin-bottom: 1rem; }
+.modal-input:focus { border-color: var(--mid-green); }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+.modal-cancel { padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: transparent; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--muted); }
+.modal-save { padding: 8px 16px; border: none; border-radius: var(--radius); background: #C4967A; color: #fff; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+.toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--dark-green); color: #fff; padding: 10px 20px; border-radius: 99px; font-size: 13px; z-index: 300; transition: transform 0.3s; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 600px) {
+  .hero-title { font-size: 28px; }
+  .cabinet-stats { grid-template-columns: repeat(2, 1fr); }
+  .cabinet-header { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">naked label<span>.beauty</span></div>
+  <div class="nav-links" id="navLinks">
+    <button class="nav-btn" onclick="showPage('settings')" title="API Settings">⚙ API</button>
+    <button class="nav-btn" onclick="showPage('auth','login')">Sign in</button>
+    <button class="nav-btn primary" onclick="showPage('auth','register')">Sign up</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-label">AI-powered ingredient analysis</div>
+    <div class="hero-title">Know exactly what<br>goes on your <span>skin</span></div>
+    <div class="hero-sub">Scan a barcode or paste an ingredient list — get a clear breakdown of every ingredient, free of charge</div>
+  </div>
+
+  <div id="apiNotice" class="api-notice">
+    ⚠ No Gemini API key set. <a onclick="showPage('settings')">Add your free API key</a> to enable AI analysis.
+  </div>
+
+  <div class="analyzer-card">
+    <div class="tabs">
+      <button class="tab active" id="tab-barcode" onclick="switchTab('barcode')">Barcode</button>
+      <button class="tab" id="tab-text" onclick="switchTab('text')">Paste ingredients</button>
+    </div>
+    <div class="tab-panel active" id="panel-barcode">
+      <div class="barcode-drop" onclick="document.getElementById('barcodeFile').click()">
+        <div class="barcode-icon">&#9638;</div>
+        <p>Upload a barcode photo</p>
+        <small>JPG, PNG — up to 10 MB</small>
+        <input type="file" id="barcodeFile" accept="image/*" style="display:none" onchange="handleBarcodeFile(this)">
+      </div>
+      <div style="text-align:center;margin:12px 0;font-size:13px;color:var(--hint);">or enter barcode number manually</div>
+      <input class="barcode-input" id="barcodeNum" placeholder="4607136810048" maxlength="20" oninput="clearBarcodeFile()">
+      <div class="form-label" style="margin-top:1rem;text-align:center;">Apply zone</div>
+      <div class="zone-row" id="zoneRow1">
+        <button type="button" class="zone-btn active" data-zone="face">Face</button>
+        <button type="button" class="zone-btn" data-zone="body">Body</button>
+        <button type="button" class="zone-btn" data-zone="hair">Hair</button>
+        <button type="button" class="zone-btn" data-zone="teeth">Teeth</button>
+        <button type="button" class="zone-btn" data-zone="nails">Nails</button>
+      </div>
+      <button type="button" class="analyze-btn" id="btnBarcode" onclick="analyzeBarcode()">Find &amp; analyse</button>
+    </div>
+    <div class="tab-panel" id="panel-text">
+      <label class="form-label">Paste ingredient list (INCI or with translations)</label>
+      <textarea class="comp-input" id="compText" placeholder="Aqua, Glycerin, Cetearyl Olivate, Sorbitan Olivate, Benzyl Alcohol, Xanthan Gum..."></textarea>
+      <div class="form-label" style="margin-top:1rem;text-align:center;">Apply zone</div>
+      <div class="zone-row" id="zoneRow2">
+        <button type="button" class="zone-btn active" data-zone="face">Face</button>
+        <button type="button" class="zone-btn" data-zone="body">Body</button>
+        <button type="button" class="zone-btn" data-zone="hair">Hair</button>
+        <button type="button" class="zone-btn" data-zone="teeth">Teeth</button>
+        <button type="button" class="zone-btn" data-zone="nails">Nails</button>
+      </div>
+      <button type="button" class="analyze-btn" id="btnText" onclick="analyzeText()">Analyse ingredients</button>
+    </div>
+  </div>
+
+  <div id="resultSection" class="result-wrap"></div>
+</div>
+
+<!-- SETTINGS (API key) -->
+<div class="page" id="page-settings">
+  <div class="settings-wrap">
+    <div style="margin-bottom:1.5rem;">
+      <button class="nav-btn" onclick="showPage('home')">&#8592; Back</button>
+    </div>
+    <div class="settings-card">
+      <div class="settings-title">API Settings</div>
+      <div class="settings-sub">
+        This app uses <strong>Google Gemini</strong> for ingredient analysis — it's free.<br><br>
+        1. Go to <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a><br>
+        2. Click "Create API key"<br>
+        3. Paste it below — stored only in your browser.<br><br>
+        <em>Free tier: 15 requests/min, 1M tokens/day — more than enough.</em>
+      </div>
+      <input class="settings-input" id="geminiKeyInput" type="password" placeholder="AIza...">
+      <button class="settings-save-btn" onclick="saveApiKey()">Save API key</button>
+      <div id="keyStatus" class="key-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div class="page" id="page-auth">
+  <div class="auth-wrap">
+    <div class="auth-card" id="authLogin">
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in to save your favourite formulas</div>
+      <button type="button" class="google-btn" onclick="loginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.615 24 12.255 24z"/><path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 000 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0c-4.64 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+        Sign in with Google
+      </button>
+      <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
+      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" id="loginEmail"></div>
+      <div class="field"><label>Password</label><input type="password" placeholder="••••••••" id="loginPass"></div>
+      <button type="button" class="submit-btn" onclick="doLogin()">Sign in</button>
+      <div class="auth-switch">Don't have an account? <a onclick="switchAuth('register')">Sign up</a></div>
+    </div>
+    <div class="auth-card" id="authRegister" style="display:none;">
+      <div class="auth-title">Create account</div>
+      <div class="auth-sub">Free — analyse and save your formulas</div>
+      <button type="button" class="google-btn" onclick="loginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.615 24 12.255 24z"/><path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 000 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0c-4.64 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+        Continue with Google
+      </button>
+      <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
+      <div class="field"><label>Name</label><input type="text" placeholder="Your name" id="regName"></div>
+      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" id="regEmail"></div>
+      <div class="field"><label>Password</label><input type="password" placeholder="At least 8 characters" id="regPass"></div>
+      <button type="button" class="submit-btn" onclick="doRegister()">Create account</button>
+      <div class="auth-switch">Already have an account? <a onclick="switchAuth('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- CABINET -->
+<div class="page" id="page-cabinet">
+  <div class="cabinet-wrap">
+    <div class="cabinet-header">
+      <div class="cabinet-avatar" id="cabAvatar">?</div>
+      <div>
+        <div class="cabinet-name" id="cabName"></div>
+        <div class="cabinet-email" id="cabEmail"></div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button type="button" class="nav-btn" onclick="showPage('home')">&#8592; Home</button>
+        <button type="button" class="nav-btn" onclick="doLogout()">Sign out</button>
+      </div>
+    </div>
+    <div class="cabinet-stats">
+      <div class="stat-card stat-green"><div class="stat-num" id="statGreen">0</div><div class="stat-label">Clean formula</div></div>
+      <div class="stat-card stat-amber"><div class="stat-num" id="statAmber">0</div><div class="stat-label">Some concerns</div></div>
+      <div class="stat-card stat-orange"><div class="stat-num" id="statOrange">0</div><div class="stat-label">Watch out</div></div>
+      <div class="stat-card stat-red"><div class="stat-num" id="statRed">0</div><div class="stat-label">Not recommended</div></div>
+    </div>
+    <div class="cabinet-sections" id="cabSections"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="saveModal">
+  <div class="modal">
+    <div class="modal-title">Save product</div>
+    <input class="modal-input" id="productName" placeholder="Product name (e.g. BIODERMA Sensibio Cream)">
+    <div class="modal-btns">
+      <button type="button" class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button type="button" class="modal-save" onclick="confirmSave()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+var state = {
+  loggedIn: false,
+  user: null,
+  savedProducts: [],
+  currentAnalysis: null,
+  currentScore: null,
+  barcodeImageData: null // base64 image from file upload
+};
+
+// ─── PERSISTENCE ─────────────────────────────────────────────────────────────
+function loadFromStorage() {
+  try {
+    var userData = localStorage.getItem('nlb_user');
+    if (userData) {
+      var u = JSON.parse(userData);
+      state.loggedIn = true;
+      state.user = u.user;
+      state.savedProducts = u.savedProducts || [];
+    }
+  } catch(e) {}
+}
+
+function saveToStorage() {
+  try {
+    if (state.loggedIn) {
+      localStorage.setItem('nlb_user', JSON.stringify({
+        user: state.user,
+        savedProducts: state.savedProducts
+      }));
+    } else {
+      localStorage.removeItem('nlb_user');
+    }
+  } catch(e) {}
+}
+
+function getApiKey() {
+  try { return localStorage.getItem('nlb_gemini_key') || ''; } catch(e) { return ''; }
+}
+function saveApiKey() {
+  var key = document.getElementById('geminiKeyInput').value.trim();
+  if (!key) { showToast('Please enter an API key'); return; }
+  try {
+    localStorage.setItem('nlb_gemini_key', key);
+    document.getElementById('keyStatus').textContent = '✓ Key saved';
+    document.getElementById('keyStatus').className = 'key-status ok';
+    updateApiNotice();
+    showToast('API key saved!');
+    setTimeout(function() { showPage('home'); }, 800);
+  } catch(e) {
+    showToast('Could not save key');
+  }
+}
+
+function updateApiNotice() {
+  var notice = document.getElementById('apiNotice');
+  if (!getApiKey()) {
+    notice.style.display = 'block';
+  } else {
+    notice.style.display = 'none';
+  }
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+function showPage(page, sub) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('page-' + page).classList.add('active');
+  if (page === 'auth') switchAuth(sub || 'login');
+  if (page === 'cabinet') renderCabinet();
+  if (page === 'settings') {
+    var k = getApiKey();
+    document.getElementById('geminiKeyInput').value = k ? '••••••••••••' : '';
+    document.getElementById('keyStatus').textContent = k ? '✓ Key is set' : 'No key saved yet';
+    document.getElementById('keyStatus').className = k ? 'key-status ok' : 'key-status missing';
+  }
+  if (page === 'home') updateApiNotice();
+  window.scrollTo(0, 0);
+}
+
+function updateNav() {
+  var nl = document.getElementById('navLinks');
+  if (state.loggedIn) {
+    nl.innerHTML =
+      '<button class="nav-btn" onclick="showPage(\'settings\')" title="API Settings">⚙ API</button>' +
+      '<div class="nav-avatar" onclick="showPage(\'cabinet\')">' + (state.user.name||'?')[0].toUpperCase() + '</div>';
+  } else {
+    nl.innerHTML =
+      '<button class="nav-btn" onclick="showPage(\'settings\')" title="API Settings">⚙ API</button>' +
+      '<button type="button" class="nav-btn" onclick="showPage(\'auth\',\'login\')">Sign in</button>' +
+      '<button type="button" class="nav-btn primary" onclick="showPage(\'auth\',\'register\')">Sign up</button>';
+  }
+}
+
+function switchTab(tab) {
+  document.getElementById('tab-barcode').classList.toggle('active', tab === 'barcode');
+  document.getElementById('tab-text').classList.toggle('active', tab === 'text');
+  document.getElementById('panel-barcode').classList.toggle('active', tab === 'barcode');
+  document.getElementById('panel-text').classList.toggle('active', tab === 'text');
+}
+
+document.querySelectorAll('.zone-row').forEach(function(row) {
+  row.addEventListener('click', function(e) {
+    var btn = e.target.closest('.zone-btn');
+    if (!btn) return;
+    row.querySelectorAll('.zone-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+  });
+});
+
+function getZone(rowId) {
+  var active = document.querySelector('#' + rowId + ' .zone-btn.active');
+  return active ? active.getAttribute('data-zone') : 'face';
+}
+
+// ─── BARCODE FILE HANDLING ────────────────────────────────────────────────────
+function handleBarcodeFile(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    state.barcodeImageData = e.target.result; // data:image/jpeg;base64,...
+    document.getElementById('barcodeNum').value = '';
+    showToast('Image loaded — click Find & analyse');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearBarcodeFile() {
+  state.barcodeImageData = null;
+  document.getElementById('barcodeFile').value = '';
+}
+
+// ─── BARCODE LOOKUP via Open Food Facts ─────────────────────────────────────
+function lookupBarcode(barcode) {
+  // Open Food Facts is open & free, no key needed
+  return fetch('https://world.openfoodfacts.org/api/v2/product/' + barcode + '.json?fields=product_name,brands,ingredients_text_en,ingredients_text')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.status !== 1) return null;
+      var p = data.product;
+      var ingredients = p.ingredients_text_en || p.ingredients_text || '';
+      return {
+        name: (p.brands ? p.brands + ' ' : '') + (p.product_name || ''),
+        ingredients: ingredients
+      };
+    })
+    .catch(function() { return null; });
+}
+
+// ─── GEMINI API CALL ─────────────────────────────────────────────────────────
+function callGemini(prompt) {
+  var key = getApiKey();
+  if (!key) {
+    return Promise.reject(new Error('No API key. Click ⚙ API in the top menu to add your free Gemini key.'));
+  }
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + key;
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.2, maxOutputTokens: 4096 }
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) throw new Error(data.error.message);
+    var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+               data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+               data.candidates[0].content.parts[0].text;
+    if (!text) throw new Error('Empty response from Gemini');
+    return text;
+  });
+}
+
+// ─── ANALYSIS ENTRY POINTS ───────────────────────────────────────────────────
+function analyzeBarcode() {
+  var num = document.getElementById('barcodeNum').value.trim();
+  var hasImage = !!state.barcodeImageData;
+
+  if (!num && !hasImage) {
+    showToast('Please enter a barcode number or upload a photo');
+    return;
+  }
+
+  var zone = getZone('zoneRow1');
+  setLoading(true);
+
+  if (hasImage) {
+    // If image was uploaded — try to extract barcode digits from filename or just tell user
+    // For now: we search by manual entry if provided alongside image
+    showToast('For best results, also enter the barcode number manually');
+    setLoading(false);
+    return;
+  }
+
+  // Look up product in Open Food Facts
+  lookupBarcode(num).then(function(product) {
+    if (product && product.ingredients && product.ingredients.length > 10) {
+      // Found real ingredients from database
+      runAnalysis(product.ingredients, zone, product.name || ('Product ' + num), product.name);
+    } else {
+      // Fallback: ask AI to reason about the barcode product (less accurate)
+      var prompt = buildPrompt(
+        'The user entered barcode ' + num + '. No ingredient data was found in public databases. ' +
+        'Please note this in your summary and analyse this as: "Ingredients not found for barcode ' + num + '". ' +
+        'Return a JSON with score "caution", summary explaining the issue, and an empty ingredients array.',
+        zone
+      );
+      return callGemini(prompt).then(function(text) {
+        var parsed = parseAIResponse(text);
+        state.currentAnalysis = { zone: zone, hint: 'Barcode ' + num };
+        state.currentScore = parsed.score;
+        renderResult(parsed, null);
+      });
+    }
+  })
+  .catch(function(e) { showError(e.message); })
+  .finally(function() { setLoading(false); });
+}
+
+function analyzeText() {
+  var comp = document.getElementById('compText').value.trim();
+  if (!comp) { showToast('Please paste an ingredient list'); return; }
+  setLoading(true);
+  runAnalysis(comp, getZone('zoneRow2'), null, null);
+}
+
+function runAnalysis(composition, zone, hint, productName) {
+  var rs = document.getElementById('resultSection');
+  rs.style.display = 'block';
+  rs.innerHTML = '<div class="loading-state"><div class="spinner"></div><div class="loading-text">Analysing ingredients…</div></div>';
+  rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  var prompt = buildPrompt(composition, zone);
+
+  callGemini(prompt)
+    .then(function(text) {
+      var parsed = parseAIResponse(text);
+      state.currentAnalysis = { composition: composition, zone: zone, hint: hint || productName };
+      state.currentScore = parsed.score;
+      renderResult(parsed, productName);
+    })
+    .catch(function(e) { showError(e.message); })
+    .finally(function() { setLoading(false); });
+}
+
+function buildPrompt(composition, zone) {
+  return 'You are an expert cosmetic chemist and dermatologist. Analyse this cosmetic ingredient list for use on: ' + zone + '.\n\n' +
+    'Ingredients: ' + composition + '\n\n' +
+    'Return ONLY valid JSON (no markdown, no code fences, no explanation):\n' +
+    '{"score":"excellent"|"good"|"caution"|"bad",' +
+    '"summary":"2-3 clear sentences for a consumer",' +
+    '"ingredients":[{"name":"INCI name","role":"function in formula",' +
+    '"safety":"safe"|"caution"|"avoid"|"neutral",' +
+    '"description":"1-2 sentences",' +
+    '"concern":"specific concern or null",' +
+    '"who_should_avoid":"e.g. sensitive skin, pregnant women, or null"}]}';
+}
+
+function parseAIResponse(text) {
+  var clean = text.replace(/```json/g,'').replace(/```/g,'').trim();
+  // Find first { to last } in case there's extra text
+  var start = clean.indexOf('{');
+  var end = clean.lastIndexOf('}');
+  if (start !== -1 && end !== -1) clean = clean.substring(start, end + 1);
+  var parsed = JSON.parse(clean);
+  if (!parsed.score || !Array.isArray(parsed.ingredients)) throw new Error('Invalid analysis format from AI');
+  return parsed;
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function setLoading(on) {
+  document.getElementById('btnBarcode').disabled = on;
+  document.getElementById('btnText').disabled = on;
+}
+
+function showError(msg) {
+  var rs = document.getElementById('resultSection');
+  rs.style.display = 'block';
+  rs.innerHTML = '<div style="padding:1rem;color:#C4967A;font-size:14px;background:#f5ede6;border-radius:var(--radius);line-height:1.6;">&#9888; ' + escapeHtml(msg) + '</div>';
+}
+
+function escapeHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── RENDER RESULT ────────────────────────────────────────────────────────────
+function renderResult(data, productName) {
+  var rs = document.getElementById('resultSection');
+  rs.style.display = 'block';
+
+  var map = {
+    'excellent': { cls:'score-excellent', icon:'&#10003;', title:'Clean formula',       sub:'No concerns found' },
+    'good':      { cls:'score-good',      icon:'&#8776;',  title:'Some concerns',       sub:'A few questionable ingredients' },
+    'caution':   { cls:'score-caution',   icon:'!',        title:'Watch out',           sub:'Pay attention to some ingredients' },
+    'bad':       { cls:'score-bad',       icon:'&#10007;', title:'Not recommended',     sub:'We suggest choosing another product' }
+  };
+  var sm = map[data.score] || map['good'];
+
+  var saveHtml = state.loggedIn
+    ? '<button type="button" class="save-btn" onclick="openSaveModal()">Save to collection</button>'
+    : '<button type="button" class="save-btn" onclick="showPage(\'auth\',\'register\')">Sign in to save</button>';
+
+  var productBanner = productName
+    ? '<div class="product-found-banner">📦 <strong>' + escapeHtml(productName) + '</strong></div>'
+    : '';
+
+  var ingrHtml = '';
+  for (var i = 0; i < data.ingredients.length; i++) {
+    var ing = data.ingredients[i];
+    var dotC = ing.safety==='safe'?'dot-g':ing.safety==='caution'?'dot-y':ing.safety==='avoid'?'dot-r':'dot-gr';
+    var pillC = ing.safety==='safe'?'pill-safe':ing.safety==='caution'?'pill-caution':ing.safety==='avoid'?'pill-avoid':'pill-neutral';
+    var warn = '';
+    if (ing.concern) warn += '<div class="ingr-warn warn-caution">&#9888; ' + escapeHtml(ing.concern) + '</div>';
+    if (ing.who_should_avoid) warn += '<div class="ingr-warn warn-avoid" style="margin-top:4px;">Who should avoid: ' + escapeHtml(ing.who_should_avoid) + '</div>';
+    ingrHtml += '<li class="ingr-item"><div class="ingr-row" onclick="toggleI(' + i + ')"><div class="dot ' + dotC + '"></div><span class="ingr-name">' + escapeHtml(ing.name) + '</span><span class="ingr-pill ' + pillC + '">' + escapeHtml(ing.safety) + '</span><span class="ingr-chev" id="ic' + i + '">&#9660;</span></div><div class="ingr-body" id="ib' + i + '"><div class="ingr-role">' + escapeHtml(ing.role) + '</div><div>' + escapeHtml(ing.description) + '</div>' + warn + '</div></li>';
+  }
+
+  rs.innerHTML =
+    productBanner +
+    '<div class="score-bar ' + sm.cls + '"><div class="score-icon">' + sm.icon + '</div><div><div class="score-title">' + sm.title + '</div><div class="score-sub">' + sm.sub + '</div></div>' + saveHtml + '</div>' +
+    '<div class="result-card"><div class="result-card-title">Summary</div><div class="summary-text">' + escapeHtml(data.summary) + '</div></div>' +
+    (ingrHtml ? '<div class="result-card"><div class="result-card-title">Ingredients</div><div class="legend"><div class="legend-item"><div class="dot dot-g"></div>safe</div><div class="legend-item"><div class="dot dot-y"></div>caution</div><div class="legend-item"><div class="dot dot-r"></div>avoid</div><div class="legend-item"><div class="dot dot-gr"></div>neutral</div></div><ul class="ingr-list">' + ingrHtml + '</ul></div>' : '');
+}
+
+function toggleI(i) {
+  document.getElementById('ib'+i).classList.toggle('open');
+  document.getElementById('ic'+i).classList.toggle('open');
+}
+
+// ─── SAVE MODAL ───────────────────────────────────────────────────────────────
+function openSaveModal() {
+  if (!state.loggedIn) { showPage('auth','register'); return; }
+  document.getElementById('productName').value = (state.currentAnalysis && state.currentAnalysis.hint) ? state.currentAnalysis.hint : '';
+  document.getElementById('saveModal').classList.add('open');
+}
+function closeModal() { document.getElementById('saveModal').classList.remove('open'); }
+function confirmSave() {
+  var name = document.getElementById('productName').value.trim() || 'Untitled';
+  var zone = state.currentAnalysis ? state.currentAnalysis.zone : 'face';
+  var score = state.currentScore || 'good';
+  var d = new Date();
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  state.savedProducts.push({ id: Date.now(), name: name, zone: zone, score: score, date: months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() });
+  saveToStorage(); // ← persist!
+  closeModal();
+  showToast('Saved to your collection');
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+function switchAuth(mode) {
+  document.getElementById('authLogin').style.display = mode === 'login' ? 'block' : 'none';
+  document.getElementById('authRegister').style.display = mode === 'register' ? 'block' : 'none';
+}
+function loginGoogle() {
+  state.loggedIn = true;
+  state.user = { name: 'Guest', email: 'guest@gmail.com' };
+  if (!state.savedProducts.length) state.savedProducts = [];
+  saveToStorage();
+  updateNav(); showPage('home'); showToast('Signed in');
+}
+function doLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  if (!email) { showToast('Please enter your email'); return; }
+  state.loggedIn = true;
+  state.user = { name: email.split('@')[0], email: email };
+  if (!state.savedProducts.length) state.savedProducts = [];
+  saveToStorage();
+  updateNav(); showPage('home'); showToast('Welcome back!');
+}
+function doRegister() {
+  var name = document.getElementById('regName').value.trim();
+  var email = document.getElementById('regEmail').value.trim();
+  if (!name || !email) { showToast('Please fill in name and email'); return; }
+  state.loggedIn = true;
+  state.user = { name: name, email: email };
+  state.savedProducts = [];
+  saveToStorage();
+  updateNav(); showPage('home'); showToast('Account created!');
+}
+function doLogout() {
+  state.loggedIn = false; state.user = null; state.savedProducts = [];
+  saveToStorage();
+  updateNav(); showPage('home'); showToast('Signed out');
+}
+
+// ─── CABINET ──────────────────────────────────────────────────────────────────
+function deleteProduct(id) {
+  state.savedProducts = state.savedProducts.filter(function(p) { return p.id !== id; });
+  saveToStorage();
+  renderCabinet();
+  showToast('Removed from collection');
+}
+
+function renderCabinet() {
+  if (!state.loggedIn) { showPage('auth','login'); return; }
+  document.getElementById('cabAvatar').textContent = (state.user.name||'?')[0].toUpperCase();
+  document.getElementById('cabName').textContent = state.user.name;
+  document.getElementById('cabEmail').textContent = state.user.email;
+  var cats = [
+    { score:'excellent', label:'Clean formula',   dot:'var(--mid-green)', bg:'var(--light-green)', ic:'var(--dark-green)', sid:'statGreen' },
+    { score:'good',      label:'Some concerns',   dot:'var(--beige)',     bg:'var(--beige-light)', ic:'var(--beige)',      sid:'statAmber' },
+    { score:'caution',   label:'Watch out',       dot:'#e8a838',         bg:'#fef3e2',            ic:'#b07d10',          sid:'statOrange' },
+    { score:'bad',       label:'Not recommended', dot:'#C4967A',         bg:'#f5ede6',            ic:'#C4967A',          sid:'statRed' }
+  ];
+  var html = '';
+  cats.forEach(function(cat) {
+    var items = state.savedProducts.filter(function(p) { return p.score === cat.score; });
+    document.getElementById(cat.sid).textContent = items.length;
+    var rows = items.length === 0
+      ? '<div class="empty-state">No products saved here yet</div>'
+      : items.map(function(p) {
+          return '<li class="product-item"><div class="product-icon" style="background:' + cat.bg + ';color:' + cat.ic + ';">&#9672;</div><div><div class="product-name">' + escapeHtml(p.name) + '</div><div class="product-meta">' + escapeHtml(p.zone) + '</div></div><div class="product-date">' + escapeHtml(p.date) + '</div><button class="product-del" onclick="deleteProduct(' + p.id + ')" title="Remove">&#10005;</button></li>';
+        }).join('');
+    html += '<div class="section-card"><div class="section-head"><div class="section-dot" style="background:' + cat.dot + ';"></div><div class="section-title-text">' + cat.label + '</div><div class="section-count">' + items.length + '</div></div><ul class="product-list">' + rows + '</ul></div>';
+  });
+  document.getElementById('cabSections').innerHTML = html;
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadFromStorage();
+updateNav();
+updateApiNotice();
+</script>
+</body>
+</html>
